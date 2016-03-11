@@ -1,15 +1,15 @@
 #!/usr/bin/python
 
-""" 
-    This is the code to accompany the Lesson 1 (Naive Bayes) mini-project. 
-
+"""
+    This is the code to accompany the Lesson 1 (Naive Bayes) mini-project.
+    
     Use a Naive Bayes Classifier to identify emails by their authors
     
     authors and labels:
     Sara has label 0
     Chris has label 1
-"""
-    
+    """
+
 import sys
 from time import time
 sys.path.append("../tools/")
@@ -33,23 +33,24 @@ from sklearn.metrics import accuracy_score
 def submitAccuracy():
     ### create classifier
     clf = GaussianNB()
-
+    
     ### fit the classifier on the training features and labels
     #TODO
+    t0 = time()
     clf.fit(features_train, labels_train)
+    print("Training time:", round(time()-t0,3), "s")
     ### use the trained classifier to predict labels for the test features
+    t1 = time()
     pred = clf.predict(features_test)
-
-
+    print("Predicting time:", round(time()-t1,3), "s")
+    
     ### calculate and return the accuracy on the test data
-    ### this is slightly different than the example, 
+    ### this is slightly different than the example,
     ### where we just print the accuracy
     ### you might need to import an sklearn module
     accuracy = accuracy_score(labels_test, pred)
     return accuracy
-    
+
 print(submitAccuracy())
 
 #########################################################
-
-
