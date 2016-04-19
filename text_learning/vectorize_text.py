@@ -41,35 +41,49 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
+        #temp_counter += 1
         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
-            print path
+            print(path)
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
-
+            text = parseOutText(email)
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
-
+            text_remove = ["sara", "shackleton", "chris", "germani", 'sshacklensf', 'cgermannsf']
+            #text = [text.replace(x, '') for x in text_remove]
+            for word in text_remove:
+                text = text.replace(word, '')
             ### append the text to word_data
-
+            word_data.append(text)
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
+            if name == 'sara':
+                from_data.append(0)
+            else:
+                from_data.append(1)
 
             email.close()
 
-print "emails processed"
+print("emails processed")
 from_sara.close()
 from_chris.close()
 
-pickle.dump( word_data, open("your_word_data.pkl", "w") )
-pickle.dump( from_data, open("your_email_authors.pkl", "w") )
+pickle.dump( word_data, open("your_word_data.pkl", "wb") )
+pickle.dump( from_data, open("your_email_authors.pkl", "wb") )
 
-
-
+#print(len(word_data))
+print(word_data[152])
 
 
 ### in Part 4, do TfIdf vectorization here
+from sklearn.feature_extraction.text import TfidfVectorizer
+#from nltk.corpus import stopwords
 
+#stop_words = stopwords.words('english')
+vect = TfidfVectorizer(stop_words = 'english')
 
+vect.fit_transform(word_data)
+
+print(len(vect.get_feature_names()))
+print(vect.get_feature_names()[34597])

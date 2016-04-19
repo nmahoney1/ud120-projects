@@ -10,8 +10,8 @@ numpy.random.seed(42)
 ### mini-project.
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
-word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+word_data = pickle.load( open(words_file, "rb"))
+authors = pickle.load( open(authors_file, "rb") )
 
 
 
@@ -28,16 +28,29 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
-
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
 ### train on only 150 events to put ourselves in this regime
 features_train = features_train[:150].toarray()
 labels_train   = labels_train[:150]
 
-
-
 ### your code goes here
 
+from sklearn.metrics import accuracy_score
+from sklearn import tree
+
+reg = tree.DecisionTreeClassifier()
+reg = reg.fit(features_train, labels_train)
+
+pred = reg.predict(features_test)
+
+feature_importance = [x for x in reg.feature_importances_ if x > 0.2]
+print(feature_importance)
 
 
+print(accuracy_score(labels_test, pred))
+print(len(reg.feature_importances_))
+print(max(reg.feature_importances_))
+power_number = numpy.where(reg.feature_importances_ == max(reg.feature_importances_))
+feature_name = vectorizer.get_feature_names()
+print(feature_name[power_number[0]])
